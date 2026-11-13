@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <meta name="description" content="FlowBoard — organize suas tarefas com simplicidade." />
+  <title>FlowBoard — Organize seu trabalho</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <main id="authView" class="auth-shell">
+    <a class="auth-brand" href="/" aria-label="FlowBoard — página inicial">
+      <span class="brand-mark">F</span>
+      <span><strong>FlowBoard</strong><small>Organize suas ideias. Faça acontecer.</small></span>
+    </a>
+
+    <section class="auth-card" aria-labelledby="authTitle">
+      <div class="auth-icon" aria-hidden="true">✦</div>
+      <p class="eyebrow" id="authEyebrow">BEM-VINDO DE VOLTA</p>
+      <h1 id="authTitle">Entre na sua conta</h1>
+      <p class="auth-subtitle" id="authSubtitle">Acesse seu quadro e continue de onde parou.</p>
+
+      <div id="authAlert" class="form-alert" role="alert" aria-live="polite" hidden></div>
+
+      <form id="authForm" novalidate>
+        <div class="field" id="nameField" hidden>
+          <label for="username">Nome de usuário</label>
+          <input id="username" name="username" type="text" autocomplete="username"
+                 minlength="3" maxlength="24" placeholder="Como podemos te chamar?" />
+        </div>
+        <div class="field">
+          <label for="identity">E-mail ou nome de usuário</label>
+          <input id="identity" name="identity" type="text" autocomplete="username"
+                 maxlength="254" placeholder="voce@exemplo.com" required />
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                   minlength="10" maxlength="128" placeholder="Digite sua senha" required />
+            <button class="password-toggle" id="togglePassword" type="button"
+                    aria-label="Mostrar senha" aria-pressed="false">Mostrar</button>
+          </div>
+          <small class="field-help" id="passwordHelp" hidden>Use pelo menos 10 caracteres.</small>
+        </div>
+        <button class="primary-btn auth-submit" id="authSubmit" type="submit">Entrar</button>
+      </form>
+
+      <p class="auth-switch" id="authSwitch">
+        Ainda não tem uma conta? <button type="button" id="switchMode">Criar conta</button>
+      </p>
+      <a class="home-link" href="/">← Voltar à página inicial</a>
+    </section>
+    <p class="auth-footnote">Sua organização começa aqui.</p>
+  </main>
+
+  <main id="boardView" class="app" hidden>
+    <header class="app-header">
+      <a class="brand" href="/" aria-label="FlowBoard — página inicial">
+        <span class="brand-mark">F</span>
+        <span><strong>FlowBoard</strong><small>Organize suas ideias. Faça acontecer.</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="user-chip" id="userChip"></span>
+        <button class="secondary-btn logout-btn" id="logoutBtn" type="button">Sair da conta</button>
+        <button class="primary-btn" id="openModalBtn" type="button">＋ Adicionar Nova Tarefa</button>
+      </div>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow">SEU ESPAÇO DE PRODUTIVIDADE</p>
+      <h1>Meu quadro</h1>
+      <p>Acompanhe suas atividades e mantenha o foco no que importa.</p>
+    </section>
+
+    <section class="board" aria-label="Quadro Kanban">
+      <section class="column todo" data-status="todo">
+        <div class="column-head">
+          <div class="column-title"><span class="dot"></span>A Fazer</div>
+          <span class="count" id="count-todo">0</span>
+        </div>
+        <div class="task-list" id="list-todo"></div>
+        <p class="column-hint">Arraste tarefas para esta coluna</p>
+      </section>
+      <section class="column doing" data-status="doing">
+        <div class="column-head">
+          <div class="column-title"><span class="dot"></span>Em Andamento</div>
+          <span class="count" id="count-doing">0</span>
+        </div>
+        <div class="task-list" id="list-doing"></div>
+        <p class="column-hint">Arraste tarefas para esta coluna</p>
+      </section>
+      <section class="column done" data-status="done">
+        <div class="column-head">
+          <div class="column-title"><span class="dot"></span>Concluído</div>
+          <span class="count" id="count-done">0</span>
+        </div>
+        <div class="task-list" id="list-done"></div>
+        <p class="column-hint">Arraste tarefas para esta coluna</p>
+      </section>
+    </section>
+  </main>
+
+  <div class="overlay" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <form class="modal" id="taskForm">
+      <div class="modal-head">
+        <h2 id="modalTitle">Adicionar tarefa</h2>
+        <button type="button" class="close-btn" id="closeModalBtn" aria-label="Fechar">×</button>
+      </div>
+      <div class="field">
+        <label for="taskTitle">Título da tarefa</label>
+        <input id="taskTitle" name="title" type="text" maxlength="90"
+               placeholder="Ex.: Estudar JavaScript" required />
+      </div>
+      <div class="field">
+        <label for="taskDescription">Descrição (opcional)</label>
+        <textarea id="taskDescription" name="description" maxlength="500"
+                  placeholder="Adicione detalhes sobre esta atividade..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" id="cancelBtn">Cancelar</button>
+        <button type="submit" class="primary-btn">Adicionar tarefa</button>
+      </div>
+    </form>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

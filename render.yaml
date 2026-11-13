@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: flowboard
+    runtime: node
+    plan: free
+    region: ohio
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /healthz
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DATABASE_URL
+        fromDatabase:
+          name: flowboard-db
+          property: connectionString
+      - key: SESSION_SECRET
+        generateValue: true
+
+databases:
+  - name: flowboard-db
+    plan: free
+    region: ohio
+    databaseName: flowboard
+    user: flowboard_user
