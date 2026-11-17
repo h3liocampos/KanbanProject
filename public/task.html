@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <title>Tarefa — FlowBoard</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="/common.js" defer></script>
+  <script src="/task.js" defer></script>
+</head>
+<body>
+  <div class="app">
+    <header class="app-header">
+      <a class="brand" href="/" aria-label="FlowBoard — meus quadros">
+        <span class="brand-mark">F</span>
+        <span><strong>FlowBoard</strong><small>Organize suas ideias. Faça acontecer.</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="user-chip" id="userChip" hidden></span>
+        <a class="secondary-btn link-btn" id="backLink" href="/">← Voltar ao quadro</a>
+      </div>
+    </header>
+
+    <section id="stateView" class="state-view">
+      <p id="stateMessage">Carregando tarefa...</p>
+      <a class="primary-btn link-btn" id="stateLink" href="/" hidden>Ir para o FlowBoard</a>
+    </section>
+
+    <main id="taskView" class="task-layout" hidden>
+      <article class="task-main">
+        <p class="eyebrow" id="crumb"></p>
+        <div class="viewer-note" id="viewerNote" hidden>Você tem acesso somente leitura a esta tarefa.</div>
+
+        <label class="sr-only" for="titleInput">Título</label>
+        <input id="titleInput" class="title-input" type="text" maxlength="90" />
+
+        <section class="panel">
+          <h2>Descrição</h2>
+          <textarea id="descInput" class="area" maxlength="4000" placeholder="Adicione detalhes sobre esta atividade..."></textarea>
+        </section>
+
+        <section class="panel">
+          <div class="panel-head">
+            <h2>Checklist</h2>
+            <span class="muted-text" id="checkProgressText"></span>
+          </div>
+          <progress id="checkProgress" max="1" value="0"></progress>
+          <ul class="checklist" id="checklist"></ul>
+          <form id="checkForm" class="inline-form">
+            <label class="sr-only" for="checkInput">Novo item</label>
+            <input id="checkInput" type="text" maxlength="200" placeholder="Adicionar subtarefa" />
+            <button class="secondary-btn" type="submit">Adicionar</button>
+          </form>
+        </section>
+
+        <section class="panel">
+          <h2>Critérios de aceite</h2>
+          <textarea id="acceptInput" class="area" maxlength="3000" placeholder="Ex.: o usuário consegue ... / o sistema valida ..."></textarea>
+        </section>
+
+        <section class="panel" id="dodPanel" hidden>
+          <h2>Definition of Done do quadro</h2>
+          <p class="dod-text" id="dodText"></p>
+        </section>
+
+        <section class="panel">
+          <h2>Comentários <span class="muted-text" id="commentCount"></span></h2>
+          <form id="commentForm" class="comment-form">
+            <label class="sr-only" for="commentInput">Novo comentário</label>
+            <textarea id="commentInput" class="area short" maxlength="2000" placeholder="Escreva um comentário..."></textarea>
+            <button class="primary-btn" type="submit">Comentar</button>
+          </form>
+          <ul class="comment-list" id="commentList"></ul>
+        </section>
+      </article>
+
+      <aside class="task-side">
+        <section class="panel">
+          <div class="field">
+            <label for="columnSelect">Coluna</label>
+            <select id="columnSelect"></select>
+          </div>
+          <div class="field">
+            <label for="assigneeSelect">Responsável</label>
+            <select id="assigneeSelect"></select>
+          </div>
+          <div class="field">
+            <label for="dueInput">Prazo</label>
+            <input id="dueInput" type="date" />
+          </div>
+          <div class="field">
+            <label for="prioritySelect">Prioridade</label>
+            <select id="prioritySelect">
+              <option value="LOW">Baixa</option>
+              <option value="MEDIUM">Média</option>
+              <option value="HIGH">Alta</option>
+            </select>
+          </div>
+          <div class="field">
+            <span class="field-label">Labels</span>
+            <div class="label-picker" id="labelPicker"></div>
+          </div>
+          <div class="field">
+            <label for="pointsInput">Story points</label>
+            <input id="pointsInput" type="number" min="0" max="100" step="1" placeholder="Estimativa" />
+          </div>
+          <div class="field">
+            <label for="sprintSelect">Sprint</label>
+            <select id="sprintSelect"></select>
+          </div>
+        </section>
+
+        <section class="panel">
+          <h2>Histórico da tarefa</h2>
+          <ul class="activity-list compact" id="activityList"></ul>
+        </section>
+      </aside>
+    </main>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>

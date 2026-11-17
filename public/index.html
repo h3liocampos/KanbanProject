@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#f5f7fb" />
+  <meta name="description" content="FlowBoard — organize suas tarefas com simplicidade." />
+  <title>FlowBoard — Organize seu trabalho</title>
+  <link rel="stylesheet" href="/style.css" />
+  <script src="/common.js" defer></script>
+  <script src="/script.js" defer></script>
+</head>
+<body>
+  <!-- Login / cadastro -->
+  <main id="authView" class="auth-shell" hidden>
+    <a class="auth-brand" href="/" aria-label="FlowBoard — página inicial">
+      <span class="brand-mark">F</span>
+      <span><strong>FlowBoard</strong><small>Organize suas ideias. Faça acontecer.</small></span>
+    </a>
+
+    <section class="auth-card" aria-labelledby="authTitle">
+      <div class="auth-icon" aria-hidden="true">✦</div>
+      <p class="eyebrow" id="authEyebrow">BEM-VINDO DE VOLTA</p>
+      <h1 id="authTitle">Entre na sua conta</h1>
+      <p class="auth-subtitle" id="authSubtitle">Acesse seu quadro e continue de onde parou.</p>
+
+      <div id="authAlert" class="form-alert" role="alert" aria-live="polite" hidden></div>
+
+      <form id="authForm" novalidate>
+        <div class="field" id="nameField" hidden>
+          <label for="username">Nome de usuário</label>
+          <input id="username" name="username" type="text" autocomplete="username"
+                 minlength="3" maxlength="24" placeholder="Como podemos te chamar?" />
+        </div>
+        <div class="field">
+          <label for="identity">E-mail ou nome de usuário</label>
+          <input id="identity" name="identity" type="text" autocomplete="username"
+                 maxlength="254" placeholder="voce@exemplo.com" required />
+        </div>
+        <div class="field">
+          <label for="password">Senha</label>
+          <div class="password-wrap">
+            <input id="password" name="password" type="password" autocomplete="current-password"
+                   minlength="10" maxlength="128" placeholder="Digite sua senha" required />
+            <button class="password-toggle" id="togglePassword" type="button"
+                    aria-label="Mostrar senha" aria-pressed="false">Mostrar</button>
+          </div>
+          <small class="field-help" id="passwordHelp" hidden>Use pelo menos 10 caracteres.</small>
+        </div>
+        <button class="primary-btn auth-submit" id="authSubmit" type="submit">Entrar</button>
+      </form>
+
+      <p class="auth-switch" id="authSwitch">
+        Ainda não tem uma conta? <button type="button" id="switchMode">Criar conta</button>
+      </p>
+    </section>
+    <p class="auth-footnote">Sua organização começa aqui.</p>
+  </main>
+
+  <!-- Lista de quadros: "Meus quadros" e "Compartilhados comigo" -->
+  <main id="boardsView" class="app" hidden>
+    <header class="app-header">
+      <a class="brand" href="/" id="brandLink" aria-label="FlowBoard — página inicial">
+        <span class="brand-mark">F</span>
+        <span><strong>FlowBoard</strong><small>Organize suas ideias. Faça acontecer.</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="user-chip" id="userChip"></span>
+        <button class="secondary-btn" id="logoutBtn" type="button">Sair da conta</button>
+      </div>
+    </header>
+
+    <section class="intro">
+      <p class="eyebrow">SEU ESPAÇO DE PRODUTIVIDADE</p>
+      <h1>Seus quadros</h1>
+      <p>Crie quadros, convide pessoas por e-mail e defina o que cada uma pode fazer.</p>
+    </section>
+
+    <section class="section-block" aria-labelledby="mineTitle">
+      <div class="section-head">
+        <h2 id="mineTitle">Meus quadros</h2>
+        <form class="inline-form" id="createBoardForm">
+          <label class="sr-only" for="newBoardName">Nome do novo quadro</label>
+          <input id="newBoardName" type="text" maxlength="80" placeholder="Nome do novo quadro" required />
+          <button class="primary-btn" type="submit">＋ Criar quadro</button>
+        </form>
+      </div>
+      <div class="board-grid" id="myBoards"></div>
+    </section>
+
+    <section class="section-block" aria-labelledby="sharedTitle">
+      <div class="section-head"><h2 id="sharedTitle">Compartilhados comigo</h2></div>
+      <div class="board-grid" id="sharedBoards"></div>
+    </section>
+  </main>
+
+  <!-- Quadro -->
+  <main id="boardView" class="app" hidden>
+    <header class="app-header">
+      <a class="brand" href="/" id="boardBrandLink" aria-label="FlowBoard — meus quadros">
+        <span class="brand-mark">F</span>
+        <span><strong>FlowBoard</strong><small>Organize suas ideias. Faça acontecer.</small></span>
+      </a>
+      <div class="header-actions">
+        <span class="user-chip" id="boardUserChip"></span>
+        <button class="secondary-btn" id="boardLogoutBtn" type="button">Sair da conta</button>
+      </div>
+    </header>
+
+    <section class="board-title-row">
+      <div>
+        <a class="back-link" href="/" id="backToBoards">← Meus quadros</a>
+        <div class="title-line">
+          <h1 id="boardName">Quadro</h1>
+          <span class="role-badge" id="roleBadge"></span>
+        </div>
+        <p class="board-sub" id="boardSub"></p>
+      </div>
+      <div class="header-actions wrap">
+        <button class="secondary-btn" id="shareBtn" type="button">Compartilhar</button>
+        <button class="secondary-btn" id="settingsBtn" type="button">Configurar quadro</button>
+        <button class="secondary-btn danger-text" id="leaveBtn" type="button">Sair do quadro</button>
+        <button class="primary-btn" id="openModalBtn" type="button">＋ Adicionar Nova Tarefa</button>
+      </div>
+    </section>
+
+    <div class="viewer-note" id="viewerNote" hidden>
+      Você tem acesso somente leitura a este quadro. Peça ao dono para torná-lo editor se precisar alterar tarefas.
+    </div>
+
+    <nav class="tabs" role="tablist" aria-label="Visões do quadro">
+      <button class="tab active" role="tab" type="button" data-tab="kanban" aria-selected="true">Quadro</button>
+      <button class="tab" role="tab" type="button" data-tab="backlog" aria-selected="false">Backlog e sprints</button>
+      <button class="tab" role="tab" type="button" data-tab="activity" aria-selected="false">Histórico</button>
+    </nav>
+
+    <section id="paneKanban">
+      <div class="toolbar">
+        <label for="sprintFilter">Mostrar</label>
+        <select id="sprintFilter" class="select"></select>
+      </div>
+      <div class="board" id="boardColumns" aria-label="Quadro Kanban"></div>
+    </section>
+
+    <section id="paneBacklog" hidden>
+      <div class="toolbar">
+        <button class="secondary-btn" id="newSprintBtn" type="button">＋ Nova sprint</button>
+      </div>
+      <div class="dod-box" id="dodBox" hidden>
+        <strong>Definition of Done</strong>
+        <p id="dodText"></p>
+      </div>
+      <div id="sprintList" class="sprint-list"></div>
+    </section>
+
+    <section id="paneActivity" hidden>
+      <ul class="activity-list" id="activityList"></ul>
+    </section>
+  </main>
+
+  <!-- Nova tarefa -->
+  <div class="overlay" id="taskModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <form class="modal" id="taskForm">
+      <div class="modal-head">
+        <h2 id="modalTitle">Adicionar tarefa</h2>
+        <button type="button" class="close-btn" data-close aria-label="Fechar">×</button>
+      </div>
+      <div class="field">
+        <label for="taskTitle">Título da tarefa</label>
+        <input id="taskTitle" name="title" type="text" maxlength="90"
+               placeholder="Ex.: Estudar JavaScript" required />
+      </div>
+      <div class="field">
+        <label for="taskColumn">Coluna</label>
+        <select id="taskColumn"></select>
+      </div>
+      <div class="field">
+        <label for="taskDescription">Descrição (opcional)</label>
+        <textarea id="taskDescription" name="description" maxlength="500"
+                  placeholder="Adicione detalhes sobre esta atividade..."></textarea>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" data-close>Cancelar</button>
+        <button type="submit" class="primary-btn">Adicionar tarefa</button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Compartilhar -->
+  <div class="overlay" id="shareModal" role="dialog" aria-modal="true" aria-labelledby="shareTitle">
+    <div class="modal wide">
+      <div class="modal-head">
+        <h2 id="shareTitle">Compartilhar quadro</h2>
+        <button type="button" class="close-btn" data-close aria-label="Fechar">×</button>
+      </div>
+      <form id="inviteForm" class="invite-form">
+        <div class="field grow">
+          <label for="inviteEmail">Convidar pelo e-mail</label>
+          <input id="inviteEmail" type="email" maxlength="254" placeholder="pessoa@exemplo.com" required />
+        </div>
+        <div class="field">
+          <label for="inviteRole">Papel</label>
+          <select id="inviteRole">
+            <option value="EDITOR">Editor</option>
+            <option value="VIEWER">Leitor</option>
+          </select>
+        </div>
+        <button class="primary-btn invite-btn" type="submit">Convidar</button>
+      </form>
+      <p class="field-help" id="inviteHelp">A pessoa precisa ter uma conta no FlowBoard. Editores alteram tarefas; leitores só visualizam.</p>
+      <h3 class="subhead">Quem tem acesso</h3>
+      <ul class="member-list" id="memberList"></ul>
+    </div>
+  </div>
+
+  <!-- Configurar quadro (dono) -->
+  <div class="overlay" id="settingsModal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal wide">
+      <div class="modal-head">
+        <h2 id="settingsTitle">Configurar quadro</h2>
+        <button type="button" class="close-btn" data-close aria-label="Fechar">×</button>
+      </div>
+      <form id="settingsForm">
+        <div class="field">
+          <label for="settingsName">Nome do quadro</label>
+          <input id="settingsName" type="text" maxlength="80" required />
+        </div>
+        <div class="field">
+          <label for="settingsDod">Definition of Done</label>
+          <textarea id="settingsDod" maxlength="2000"
+                    placeholder="Ex.: código revisado, testes passando, deploy feito..."></textarea>
+        </div>
+        <button class="primary-btn" type="submit">Salvar</button>
+      </form>
+
+      <h3 class="subhead">Colunas e limite de WIP</h3>
+      <p class="field-help">O WIP é o máximo de tarefas em andamento na coluna. Deixe vazio para não limitar. Marque “Concluída” nas colunas que representam trabalho finalizado.</p>
+      <div id="columnRows" class="column-rows"></div>
+      <form id="newColumnForm" class="inline-form">
+        <label class="sr-only" for="newColumnName">Nome da nova coluna</label>
+        <input id="newColumnName" type="text" maxlength="40" placeholder="Nova coluna" required />
+        <label class="sr-only" for="newColumnWip">Limite de WIP</label>
+        <input id="newColumnWip" type="number" min="1" max="99" placeholder="WIP" class="wip-input" />
+        <button class="secondary-btn" type="submit">＋ Coluna</button>
+      </form>
+
+      <h3 class="subhead">Zona de perigo</h3>
+      <button class="secondary-btn danger-text" id="deleteBoardBtn" type="button">Excluir este quadro</button>
+    </div>
+  </div>
+
+  <!-- Nova sprint -->
+  <div class="overlay" id="sprintModal" role="dialog" aria-modal="true" aria-labelledby="sprintTitle">
+    <form class="modal" id="sprintForm">
+      <div class="modal-head">
+        <h2 id="sprintTitle">Nova sprint</h2>
+        <button type="button" class="close-btn" data-close aria-label="Fechar">×</button>
+      </div>
+      <div class="field">
+        <label for="sprintName">Nome</label>
+        <input id="sprintName" type="text" maxlength="60" placeholder="Sprint 1" required />
+      </div>
+      <div class="field">
+        <label for="sprintGoal">Objetivo</label>
+        <textarea id="sprintGoal" maxlength="300" placeholder="O que queremos entregar nesta sprint?"></textarea>
+      </div>
+      <div class="field-row">
+        <div class="field">
+          <label for="sprintStart">Início</label>
+          <input id="sprintStart" type="date" />
+        </div>
+        <div class="field">
+          <label for="sprintEnd">Fim</label>
+          <input id="sprintEnd" type="date" />
+        </div>
+      </div>
+      <div class="modal-actions">
+        <button type="button" class="secondary-btn" data-close>Cancelar</button>
+        <button type="submit" class="primary-btn">Criar sprint</button>
+      </div>
+    </form>
+  </div>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+</body>
+</html>
